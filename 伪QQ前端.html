@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仿QQ登录页面</title>
+    <style>
+        /* 整体页面样式 */
+        body {
+            font-family: "PingFang SC", sans-serif;
+            font-size: 17px;
+            background: #f4f5f6;
+            min-height: 600px;
+            overflow: scroll;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 内容容器 */
+        #content {
+            width: 100%;
+            position: relative;
+        }
+
+        /* 登录模块 */
+        #login {
+            padding: 41.25px 16px 0px;
+            margin: 0 auto;
+            max-width: 396px;
+        }
+
+        /* QQ logo样式 */
+        #logo {
+            height: 100px;
+            width: 244px;
+            margin: 0 auto 50px;
+            background-image: url('https://qq-web-legacy.cdn-go.cn/any.ptlogin2.qq.com/1f52eb04/ptlogin/v4/style/9/images/logo.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+        /* 输入框通用样式 */
+       .inputstyle {
+            width: 90%;
+            height: 55px;
+            color: #000;
+            border: none;
+            background: none;
+            font-size: 17px;
+            appearance: none;
+            padding-left: 10px;
+        }
+
+        /* 输入框占位符样式 */
+       .inputstyle::-webkit-input-placeholder {
+            color: #ccc;
+        }
+
+        /* 输入框聚焦样式 */
+       .inputstyle:focus {
+            outline: 0;
+        }
+
+        /* 输入框列表容器样式 */
+        #g_list {
+            background: #fff;
+            height: 112px;
+            border-radius: 8px;
+            padding: 0 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 单个输入框容器样式 */
+        #g_u,
+        #g_p {
+            position: relative;
+        }
+
+        /* 第一个输入框底部边框样式 */
+        #g_u {
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        /* 输入框清除按钮样式 */
+       .del_touch {
+            width: 18px;
+            position: absolute;
+            right: 0;
+            height: 56px;
+            display: none;
+            z-index: 1;
+        }
+
+       .del_u {
+            display: block;
+            top: 19px;
+            height: 18px;
+            border-radius: 9px;
+            background: url('/style/8/images/android_logo_v1.png') -117px -2px no-repeat;
+        }
+
+        /* 登录按钮样式 */
+        #go,
+        #onekey {
+            width: 100%;
+            height: 45px;
+            line-height: 45px;
+            background: #0099ff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            margin-top: 36px;
+            display: block;
+            font-size: 17px;
+            font-weight: 500;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 一键登录按钮默认隐藏 */
+        #onekey {
+            margin-top: 16px;
+            background: #0099ff;
+            display: none;
+        }
+
+        /* 切换登录方式模块样式 */
+        #switch {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* 快速登录历史账号默认隐藏 */
+        #switch #swicth_login {
+            display: none;
+        }
+
+        /* 找回密码和新用户注册容器样式 */
+        #switch #zc_feedback {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        /* 找回密码和新用户注册文字样式 */
+        #switch #forgetpwd,
+        #switch #zc {
+            color: #000;
+            line-height: 14px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        /* 分割线样式 */
+        #switch #split {
+            height: 13px;
+            width: 1px;
+            margin: 0 31px;
+            background: #e6e6e6;
+        }
+
+        /* 错误提示模块样式 */
+        #error_tips {
+            position: absolute;
+            top: 0;
+            z-index: 100;
+            display: none;
+            opacity: 0.95;
+            width: 100%;
+        }
+
+        #error_tips #error_tips_content {
+            position: relative;
+            padding: 10px 3px;
+            border-radius: 5px;
+            background-color: #525c5f;
+        }
+
+        #error_tips #error_tips_content #error_icon {
+            position: absolute;
+            top: 10px;
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: url("/style/8/images/info.png") no-repeat;
+        }
+
+        #error_tips #error_tips_content #error_message {
+            display: inline-block;
+            line-height: 28px;
+            font-size: 14px;
+            color: #fff;
+            padding: 0 0 0 28px;
+        }
+
+        /* 验证码模块样式 */
+        #vcode {
+            margin: 0 auto;
+            padding-top: 40px;
+            display: none;
+        }
+
+        #vcode #vcode_tips {
+            display: block;
+            width: 290px;
+            height: 20px;
+            line-height: 20px;
+            margin: 0 auto 15px;
+            color: #77838d;
+        }
+
+        #vcode #vcode_area {
+            position: relative;
+            margin: 0 auto;
+            width: 290px;
+            height: 70px;
+            border-radius: 5px;
+            border: 1px solid #b8b8b8;
+            background: #fff;
+        }
+
+        #vcode #vcode_img {
+            position: absolute;
+            left: 3px;
+            width: 140px;
+            height: 70px;
+        }
+
+        #vcode #vcode_input {
+            position: absolute;
+            top: -1px;
+            left: 145px;
+            width: 145px;
+            height: 70px;
+            border: 1px solid #9d9d9d;
+            background: none;
+            appearance: none;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            line-height: 28px;
+            font-size: 28px;
+            box-shadow: #ccc 0px 0px 10px inset;
+        }
+
+        #vcode #input_tips {
+            position: absolute;
+            top: 5px;
+            left: 150px;
+            display: block;
+            width: 135px;
+            height: 50px;
+            color: #b3b3b3;
+            z-index: 1;
+            padding-top: 8px;
+        }
+
+        #vcode #submit {
+            width: 288px;
+            height: 22px;
+            padding: 10px 0px;
+            background: #7ec82c;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 22px;
+            text-align: center;
+            margin: 35px auto 0px;
+        }
+    </style>
+<body>
+    <div id="content">
+        <div id="error_tips">
+            <div id="error_tips_content">
+                <span id="error_icon"></span>
+                <span id="error_message">你还没有输入密码！</span>
+            </div>
+        </div>
+        <div id="login">
+            <div id="logo"></div>
+            <div id="web_login">
+                <ul id="g_list">
+                    <li id="g_u">
+                        <div class="del_touch"><span class="del_u"></span></div>
+                        <input id="u" class="inputstyle" name="u" autocomplete="off" placeholder="QQ号码/手机/邮箱">
+                    </li>
+                    <li id="g_p">
+                        <div class="del_touch"><span class="del_u"></span></div>
+                        <input id="p" class="inputstyle" maxlength="16" type="password" name="p" autocorrect="off" placeholder="请输入你的QQ密码">
+                    </li>
+                </ul>
+                <div id="go">登录</div>
+                <div id="onekey" class="weak" style="display: block;">一键登录</div>
+            </div>
+            <div id="switch">
+                <div id="swicth_login">快速登录历史账号</div>
+                <div id="zc_feedback">
+                    <span id="forgetpwd">找回密码</span>
+                    <span id="split"></span>
+                    <span id="zc">新用户注册</span>
+                </div>
+            </div>
+        </div>
+        <div id="vcode">
+            <label id="vcode_tips">点击图片可更换验证码</label>
+            <div id="vcode_area">
+                <img id="vcode_img">
+                <label id="input_tips">请输入图中的字符不区分大小写</label>
+                <input id="vcode_input" name="vcode_input" tabindex="3" autocomplete="off" autocorrect="off" maxlength="6">
+            </div>
+            <div id="submit">提交验证码</div>
+        </div>
+    </div>
+    <script>
+        const loginButton = document.getElementById('go');
+        loginButton.addEventListener('click', function () {
+            const account = document.getElementById('u').value;
+            const password = document.getElementById('p').value;
+            if (account && password) {
+                alert('登录成功，这是模拟提示，实际需后端验证');
+            } else {
+                alert('请输入完整的账号和密码');
+            }
+        });
+        const oneKeyLogin = document.getElementById('onekey');
+        oneKeyLogin.addEventListener('click', function () {
+            alert('需要软件QQ登录');
+        });
+    </script>
+</body>
+</html>
